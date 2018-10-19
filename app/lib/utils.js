@@ -1,5 +1,6 @@
 const path = require('path');
-
+const fs = require('fs');
+const request = require('request-promise');
 const cv = require("opencv4nodejs");
 
 exports.cv = cv;
@@ -54,6 +55,29 @@ exports.drawRectAroundBlobs = (binaryImg, dstImg, minPxSize, fixedRectWidth) => 
   }
 };
 
+
+exports.saveImg = (url, id) => {
+  return new Promise((resolve, reject) => {
+    let filename = "cam" + id + ".jpg";
+    // let path = "../data/" + filename;
+    let fullFilename = path.join(__dirname, '..', 'data', filename)
+    request(url, { encoding: 'binary' }, function (error, response, body) {
+      if (error) reject(error)
+      
+      fs.writeFile(fullFilename, body, 'binary', function (err) {
+        if (err) {
+          console.log("Error saving imagefile: ", filename);
+          console.log("Error:", err);
+          reject(err)
+        }
+        resolve()
+      });
+    })
+  })
+};
+
+
+
 const drawRect = (image, rect, color, opts = { thickness: 2 }) =>
   image.drawRectangle(
     rect,
@@ -61,6 +85,7 @@ const drawRect = (image, rect, color, opts = { thickness: 2 }) =>
     opts.thickness,
     cv.LINE_8
   );
+
 
 exports.drawRect = drawRect;
 exports.drawBlueRect = (image, rect, opts = { thickness: 2 }) =>

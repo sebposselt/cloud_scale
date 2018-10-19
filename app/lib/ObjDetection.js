@@ -1,4 +1,6 @@
-const { drawRect} = require('./utils');
+const request = require('request-promise');
+const {drawRect,} = require('./utils');
+const utils = require('./utils');
 const cv = require("opencv4nodejs");
 const fs = require('fs');
 const path = require('path');
@@ -37,7 +39,7 @@ function classifyImg(img) {
   let outputBlob = net.forward();
   // extract NxM Mat
   outputBlob = outputBlob.flattenFloat(outputBlob.sizes[2], outputBlob.sizes[3]);
-
+  //console.log(extractResults(outputBlob, img));
   return extractResults(outputBlob, img)
     .map(r => Object.assign({}, r, { className: classNames[r.classLabel] }));
 }
@@ -49,56 +51,30 @@ const makeDrawClassDetections = predictions => (drawImg, className, getColor, th
   return drawImg;
 };
 
-const runDetectDishesExample = () => {
-  const img = cv.imread('../data/dishes.jpg');
-  const minConfidence = 0.2;
 
-  const predictions = classifyImg(img).filter(res => res.confidence > minConfidence);
+exports.runDetect = async function (url, id, minConf = 0.3)
+{
+  try {
+    await utils.saveImg(url, id);
+    // console.log('runDetect: image should be saved')
+    let filenameR = "cam" + id + ".jpg";
+    let fullFilenameR = path.join(__dirname, '..', 'data', filenameR)
+    let filenameW = "DONEcam" + id + ".jpg";
+    let fullFilenameW = path.join(__dirname, '..', 'data', filenameW)
+    const img = await cv.imreadAsync(fullFilenameR);
+    // console.log("read")
 
-  const drawClassDetections = makeDrawClassDetections(predictions);
+    const minConfidence = minConf
+    const predictions = classifyImg(img).filter(res => res.confidence > minConfidence);
+    const drawClassDetections = makeDrawClassDetections(predictions);
+    const getRandomColor = () => new cv.Vec(Math.random() * 255, Math.random() * 255, 255);
+    drawClassDetections(img, 'car', getRandomColor);
+    
+    cv.imwrite(fullFilenameW,img);  
 
-  const classColors = {
-    fork: new cv.Vec(0, 255, 0),
-    bowl: new cv.Vec(255, 0, 0),
-    'wine glass': new cv.Vec(0, 0, 255),
-    cup: new cv.Vec(0, 255, 255)
-  };
-
-  const legendLeftTop = new cv.Point(580, 20);
-  const alpha = 0.4;
-  cv.drawTextBox(
-    img,
-    legendLeftTop,
-    Object.keys(classColors).map(className => ({
-      text: className,
-      fontSize: 0.8,
-      color: classColors[className]
-    })),
-    alpha
-  );
-
-  Object.keys(classColors).forEach((className) => {
-    const color = classColors[className];
-    // draw detections
-    drawClassDetections(img, className, () => color);
-  });
-
-  cv.imshowWait('img', img);
+  } catch (error) {
+    console.log("runDetect error: ",error);
+  }
+  
 };
 
-const runDetectPeopleExample = () => {
-  const img = cv.imread("../data/statictraffic.jpg")
-  const minConfidence = 0.4;
-
-  const predictions = classifyImg(img).filter(res => res.confidence > minConfidence);
-
-  const drawClassDetections = makeDrawClassDetections(predictions);
-
-  const getRandomColor = () => new cv.Vec(Math.random() * 255, Math.random() * 255, 255);
-
-  drawClassDetections(img, 'car', getRandomColor);
-  cv.imshowWait('img', img);
-};
-
-//runDetectDishesExample();
-runDetectPeopleExample();
