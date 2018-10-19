@@ -52,7 +52,7 @@ const makeDrawClassDetections = predictions => (drawImg, className, getColor, th
 };
 
 
-exports.runDetect = async function (url, id, minConf = 0.3)
+exports.runDetect = async function (id,url, minConf = 0.3)
 {
   try {
     await utils.saveImg(url, id);
