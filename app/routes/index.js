@@ -12,7 +12,9 @@ var webCamlist = ["1", "3", "117"];
 router.get('/', function(req, res, next) {
     qldTraffic.QLDtrafficAPIRequest().then(function whenOk(allTrafficData) {
         let webcamData = qldTraffic.filterTrafficData(webCamlist,allTrafficData);
-        qldTraffic.extractImageURL(webcamData);
+
+        //loop through list to extract all urls
+        qldTraffic.extractImageURL(webcamData[0]);
         res.render('index', { title: 'Express' });
     }).catch((error) => {
         console.log(error);

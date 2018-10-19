@@ -33,6 +33,7 @@ exports.filterTrafficData = function (webcamList, allTrafficData){
     let webCamData = [];
     for (let i = 0; i < allTrafficData.features.length; i++) {
         if (webcamList.includes(String(allTrafficData.features[i].properties.id))){
+            console.log("Webcam    " + allTrafficData.features[i].properties.id);
             webCamData.push(allTrafficData.features[i]);
         }
     }
@@ -43,8 +44,8 @@ exports.filterTrafficData = function (webcamList, allTrafficData){
 
 exports.extractImageURL = function(webcamData){
     let webcamImage = {
-        "id" : webcamData[i].properties.id,
-        "url" : webcamData[i].properties.image_url
+        "id" : webcamData.properties.id,
+        "url" : webcamData.properties.image_url
     };
     return webcamImage;
 };
