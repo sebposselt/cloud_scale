@@ -1,35 +1,27 @@
 var express = require('express');
 var router = express.Router();
 
-var datamanager = require('../datamanager');
+var qldTraffic = require('../qldTraffic');
 
 
-var webCamlist = ["1", "3", "117"];
-var promises = [];
+webamList = ["1", "3", "117"];
 
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    qldTraffic.QLDtrafficAPIRequest().then(function whenOk(allTrafficData) {
 
+        let webcamData = qldTraffic.filterTrafficData(webamList,allTrafficData);
 
-  //should probably be a post route. Where the webcam ids comes from the user.
+        //loop through list to extract all urls
+        qldTraffic.extractImageURL(webcamData[0]);
 
-  for (let i = 0; i < webCamlist.length; i++) {
-    console.log(webCamlist[i]);
-    promises.push(datamanager.QLDtrafficAPIRequest(webCamlist[i]));
-  }
+        res.render('index', { title: 'Express' });
+    }).catch((error) => {
+        console.log(error);
 
-
-  Promise.all(promises).then(function whenOk(response) {
-      datamanager.extractImages(response);
-
-      res.render('index', { title: 'Express' });
-  }).catch((error) => {
-      console.log("promise failed");
   });
-
-
 });
 
 module.exports = router;
