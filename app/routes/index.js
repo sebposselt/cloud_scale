@@ -4,17 +4,19 @@ var router = express.Router();
 var qldTraffic = require('../qldTraffic');
 
 
-var webCamlist = ["1", "3", "117"];
+webamList = ["1", "3", "117"];
 
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
     qldTraffic.QLDtrafficAPIRequest().then(function whenOk(allTrafficData) {
-        let webcamData = qldTraffic.filterTrafficData(webCamlist,allTrafficData);
+
+        let webcamData = qldTraffic.filterTrafficData(webamList,allTrafficData);
 
         //loop through list to extract all urls
         qldTraffic.extractImageURL(webcamData[0]);
+
         res.render('index', { title: 'Express' });
     }).catch((error) => {
         console.log(error);

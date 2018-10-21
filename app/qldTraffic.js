@@ -2,6 +2,9 @@ var unirest = require('unirest');
 let apikey = "3e83add325cbb69ac4d8e5bf433d770b";
 
 
+//contains a list of webcamID that the user has requested
+let webcamList = [];
+
 
 let APIinfo = {
     "hostname" : "https://api.qldtraffic.qld.gov.au/",
@@ -9,6 +12,21 @@ let APIinfo = {
     "APIkey": "?apikey=" + apikey
 };
 
+
+exports.addCamera = function(webcamID){
+    if (!(webcamList.includes(webcamID))) {
+        webcamList.push(webcamID);
+        console.log("Added camera " + webcamID);
+    }
+};
+
+exports.removeCamera = function(webcamID){
+    var index = webcamList.indexOf(webcamID);
+    if (index > -1) {
+        webcamList.splice(index, 1);
+        console.log("Removed camera " + webcamID);
+    }
+};
 
 
 exports.QLDtrafficAPIRequest = function()  {
@@ -29,16 +47,18 @@ exports.QLDtrafficAPIRequest = function()  {
 };
 
 
+//filters out the cameras the user has requested
 exports.filterTrafficData = function (webcamList, allTrafficData){
-    let webCamData = [];
+    let webcamData = [];
     for (let i = 0; i < allTrafficData.features.length; i++) {
         if (webcamList.includes(String(allTrafficData.features[i].properties.id))){
             console.log("Webcam    " + allTrafficData.features[i].properties.id);
-            webCamData.push(allTrafficData.features[i]);
+            webcamData.push(allTrafficData.features[i]);
         }
     }
-    return webCamData;
+    return webcamData;
 };
+
 
 
 
