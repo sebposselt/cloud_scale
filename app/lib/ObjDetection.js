@@ -1,5 +1,5 @@
 const request = require('request-promise');
-const {drawRect,} = require('./utils');
+const { drawRect, } = require('./utils');
 const utils = require('./utils');
 const cv = require("opencv4nodejs");
 const fs = require('fs');
@@ -7,12 +7,16 @@ const path = require('path');
 const classNames = require('./dnnCocoClassNames');
 const { extractResults } = require('./dnn/ssdUtils');
 
+
+
+// code copied from https://github.com/justadudewhohacks/opencv4nodejs/tree/master/examples under MIT-licence
+// **********************************************************************************************************
 if (!cv.xmodules.dnn) {
   throw new Error('exiting: opencv4nodejs compiled without dnn module');
 }
 
 // replace with path where you unzipped inception model
-const ssdcocoModelPath = '/Users/datamat/Documents/qut/cloud/sandbox/models/VGGNet/coco/SSD_300x300';
+const ssdcocoModelPath = path.join(__dirname, 'model', 'VGGNet', 'coco', 'SSD_300x300');
 
 const prototxt = path.resolve(ssdcocoModelPath, 'deploy.prototxt');
 const modelFile = path.resolve(ssdcocoModelPath, 'VGG_coco_SSD_300x300_iter_400000.caffemodel');
@@ -50,31 +54,38 @@ const makeDrawClassDetections = predictions => (drawImg, className, getColor, th
     .forEach(p => drawRect(drawImg, p.rect, getColor(), { thickness }));
   return drawImg;
 };
+// **********************************************************************************************************
 
 
-exports.runDetect = async function (id,url, minConf = 0.3)
-{
+
+// Summery: runs object detection on a picture, saves the resulting image with bounding boxes around found objs
+// Input: obj of type {id:,url:} and minConf is optional.
+// Output:
+// Error:
+// Comment:
+exports.runDetect = async function (obj, minConf = 0.3) {
+  let id = obj.id;
+  let url = obj.url;
   try {
-    await utils.saveImg(url, id);
-    // console.log('runDetect: image should be saved')
+    await utils.saveImgFromUrl(id, url);
+    console.log('runDetect: image should be saved');
     let filenameR = "cam" + id + ".jpg";
     let fullFilenameR = path.join(__dirname, '..', 'data', filenameR)
     let filenameW = "DONEcam" + id + ".jpg";
     let fullFilenameW = path.join(__dirname, '..', 'data', filenameW)
     const img = await cv.imreadAsync(fullFilenameR);
-    // console.log("read")
 
     const minConfidence = minConf
     const predictions = classifyImg(img).filter(res => res.confidence > minConfidence);
     const drawClassDetections = makeDrawClassDetections(predictions);
     const getRandomColor = () => new cv.Vec(Math.random() * 255, Math.random() * 255, 255);
     drawClassDetections(img, 'car', getRandomColor);
-    
-    cv.imwrite(fullFilenameW,img);  
+
+    cv.imwrite(fullFilenameW, img);
+    return { "id": id, img: utils.convertImgToBASE64(img) };
 
   } catch (error) {
-    console.log("runDetect error: ",error);
+    console.log("runDetect IO error: ", error);
   }
-  
-};
+}
 
