@@ -62,7 +62,7 @@ exports.filterTrafficData = function (webcamList, allTrafficData){
 
 
 
-exports.extractImageURL = function(webcamData){
+exports.extractImageURLAndID = function(webcamData){
     let webcamImage = {
         "id" : webcamData.properties.id,
         "url" : webcamData.properties.image_url
