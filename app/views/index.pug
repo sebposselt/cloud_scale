@@ -10,9 +10,9 @@ block content
 
   script(type='text/javascript')  
     var cam_list = #{cams};
-    
+
   #form
-    form(align="center" action='/', method='get', target="_self")
+    form(align="center" action='/car-detection', method='post', target="_self")
       each val, index in cams
         +cam(val.id,val.description)
       input(type='submit', value='Find Cams')

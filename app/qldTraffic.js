@@ -52,7 +52,6 @@ exports.filterTrafficData = function (webcamList, allTrafficData){
     let webcamData = [];
     for (let i = 0; i < allTrafficData.features.length; i++) {
         if (webcamList.includes(String(allTrafficData.features[i].properties.id))){
-            console.log("Webcam    " + allTrafficData.features[i].properties.id);
             webcamData.push(allTrafficData.features[i]);
         }
     }
@@ -76,7 +75,6 @@ exports.cleanList = function(allTrafficData){
     for (let i = 0; i < allTrafficData.features.length; i++) {
         const elm = allTrafficData.features[i];
         let tmp = {"id": elm.properties.id, "description":elm.properties.description};
-        console.log(tmp, elm.properties.description)
         res.push(tmp);
         // res.push(elm.properties.description);
     }
