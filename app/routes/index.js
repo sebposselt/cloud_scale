@@ -6,9 +6,6 @@ const qldTraffic = require('../qldTraffic');
 
 
 
-
-
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
     qldTraffic.QLDtrafficAPIRequest().then(function whenOk(allTrafficData) {
