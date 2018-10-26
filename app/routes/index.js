@@ -14,14 +14,12 @@ router.get('/', function (req, res, next) {
         const cams = qldTraffic.cleanList(allTrafficData); 
         let webcamData = qldTraffic.filterTrafficData(webcamList, allTrafficData);
         //loop through list, extract all url and IDs, run detection.
-        let pushList = []
         let detectCarPromises = webcamData.map(x => {
             return objdetection.runDetect(qldTraffic.extractImageURLAndID(x), 0.1);
         });
         detectCarsArr = await Promise.all( detectCarPromises);
-        console.log("here!");
-        db.pushPicture(detectCarsArr);
 
+        db.bulkUpload(detectCarsArr);
         res.render('index', { 
             title: 'Express',
             cams: cams

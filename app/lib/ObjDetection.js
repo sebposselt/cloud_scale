@@ -89,7 +89,6 @@ exports.runDetect = async function (obj, minConf = 0.3) {
 
     //save file
     cv.imwrite(fullFilenameW, img);
-    
     return { "cam": id, pic: utils.convertImgToBASE64(img) };
 
   } catch (error) {

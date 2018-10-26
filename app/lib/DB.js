@@ -22,7 +22,6 @@ const insertPicture = function(arrOfObjs,db,callback) {
         callback(result);
     });
 }
-
 const removeDocument = function (IDofObj, db, callback) {
     // Get the documents collection
     const collection = db.collection(collectionName);
@@ -38,7 +37,6 @@ const removeDocument = function (IDofObj, db, callback) {
 const updateDocument = function (id, img, db, callback) {
     // Get the documents collection
     const collection = db.collection(collectionName);
-
     collection.updateOne(
         { "cam": id },
         { $set: { "pic": img } }, function (err, result) {
@@ -61,13 +59,24 @@ const findDocuments = function (id, db, callback) {
         callback(docs);
     });
 }
-
 const clear = function (db) {
     // Get the documents collection
     const collection = db.collection(collectionName);
     // Delete document where a is 3
     collection.remove({});
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 exports.findImage = function (IDofObj) {
@@ -129,6 +138,29 @@ exports.clearDB = function () {
         const db = client.db(dbName);
 
         clear(db)
+        client.close();
+    });
+}
+
+
+exports.bulkUpload = function (arrOfObjs) {
+    mongoClient.connect(url, function (err, client) {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        // the target DB
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        let bulk = collection.initializeUnorderedBulkOp();
+
+        for (let i = 0; i < arrOfObjs.length; i++) {
+            const elm = arrOfObjs[i];
+            bulk.find({ "cam": elm.cam }).upsert().update(
+                {
+                    $set: { "pic": elm.pic },
+                    $setOnInsert: { "cam": elm.cam }
+                });
+        }
+        bulk.execute();
         client.close();
     });
 }
