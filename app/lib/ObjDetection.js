@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const classNames = require('./dnnCocoClassNames');
 const { extractResults } = require('./dnn/ssdUtils');
+const db = require("./DB");
 
 
 
@@ -57,6 +58,11 @@ const makeDrawClassDetections = predictions => (drawImg, className, getColor, th
 // **********************************************************************************************************
 
 
+function sendImgToDB(imgBase64) {
+
+}
+
+
 
 // Summery: runs object detection on a picture, saves the resulting image with bounding boxes around found objs
 // Input: obj of type {id:,url:} and minConf is optional.
@@ -81,8 +87,10 @@ exports.runDetect = async function (obj, minConf = 0.3) {
     const getRandomColor = () => new cv.Vec(Math.random() * 255, Math.random() * 255, 255);
     drawClassDetections(img, 'car', getRandomColor);
 
+    //save file
     cv.imwrite(fullFilenameW, img);
-    return { "id": id, img: utils.convertImgToBASE64(img) };
+    
+    return { "cam": id, pic: utils.convertImgToBASE64(img) };
 
   } catch (error) {
     console.log("runDetect IO error: ", error);

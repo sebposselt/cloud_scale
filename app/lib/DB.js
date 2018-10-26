@@ -15,8 +15,8 @@ const insertPicture = function(arrOfObjs,db,callback) {
     collection.insertMany(arrOfObjs, function (err, result) {
         len = arrOfObjs.length;
         assert.equal(err, null);
-        assert.equal(len, result.result.n);
-        assert.equal(len, result.ops.length);
+        // assert.equal(len, result.result.n);
+        // assert.equal(len, result.ops.length);
         //error handling stuff done here
         console.log("Inserted " + len+ " pictures to DB");
         callback(result);
@@ -61,6 +61,14 @@ const findDocuments = function (id, db, callback) {
         callback(docs);
     });
 }
+
+const clear = function (db) {
+    // Get the documents collection
+    const collection = db.collection(collectionName);
+    // Delete document where a is 3
+    collection.remove({});
+}
+
 
 exports.findImage = function (IDofObj) {
     mongoClient.connect(url, function (err, client) {
@@ -113,48 +121,14 @@ exports.pushPicture = function (arrOfObjs) {
     });
 }
 
+exports.clearDB = function () {
+    mongoClient.connect(url, function (err, client) {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        // the target DB
+        const db = client.db(dbName);
 
-
-
-// const updateDocument = function (id,img, db, callback) {
-//     // Get the documents collection
-//     const collection = db.collection('documents');
-//     // Update document where a is 2, set b equal to 1
-//     collection.updateOne({ "id": id }
-//         , { $set: { pic: img } }, function (err, result) {
-//             assert.equal(err, null);
-//             assert.equal(1, result.result.n);
-//             console.log("Updated the document with the field a equal to 2");
-//             callback(result);
-//         });
-// }
-
-// const findDocuments = function (db, callback) {
-//     // Get the documents collection
-//     const collection = db.collection(collectionName);
-//     // Find some documents
-//     collection.find({ 'a': 3 }).toArray(function (err, docs) {
-//         assert.equal(err, null);
-//         console.log("Found the following records");
-//         console.log(docs);
-//         callback(docs);
-//     });
-// }
-
-// // Connection URL
-// const url = 'mongodb://localhost:27017';
-
-// // Database Name
-// const dbName = 'myproject';
-
-// // Use connect method to connect to the server
-// MongoClient.connect(url, function (err, client) {
-//     assert.equal(null, err);
-//     console.log("Connected successfully to server");
-
-//     const db = client.db(dbName);
-
-//     insertDocuments(db, function () {
-//         client.close();
-//     });
-// });
+        clear(db)
+        client.close();
+    });
+}
