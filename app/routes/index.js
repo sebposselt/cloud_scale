@@ -42,11 +42,11 @@ router.get('/', function (req, res, next) {
             tmp.push(img);
         });
 
-        
+
 
         res.render('index', { 
             title: 'Express',
-            cams: JSON.stringify(cams),
+            cams: cams
         });
     }).catch((error) => {
         console.log(error);
