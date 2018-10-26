@@ -13,12 +13,13 @@ let APIinfo = {
 };
 
 
-exports.addCamera = function(webcamID){
-    if (!(webcamList.includes(webcamID))) {
-        webcamList.push(webcamID);
-        console.log("Added camera " + webcamID);
-    }
+exports.addCameras = function(reqBody){
+    webcamList.push(reqBody);
+    console.log("Added cameras");
+    console.log(webcamList);
 };
+
+
 
 exports.removeCamera = function(webcamID){
     var index = webcamList.indexOf(webcamID);
@@ -48,7 +49,9 @@ exports.QLDtrafficAPIRequest = function()  {
 
 
 //filters out the cameras the user has requested
-exports.filterTrafficData = function (webcamList, allTrafficData){
+//må kunne slå op på client
+
+exports.filterTrafficData = function (allTrafficData, sessID){
     let webcamData = [];
     for (let i = 0; i < allTrafficData.features.length; i++) {
         if (webcamList.includes(String(allTrafficData.features[i].properties.id))){
@@ -76,7 +79,7 @@ exports.cleanList = function(allTrafficData){
     for (let i = 0; i < allTrafficData.features.length; i++) {
         const elm = allTrafficData.features[i];
         let tmp = {"id": elm.properties.id, "description":elm.properties.description};
-        console.log(tmp, elm.properties.description)
+        //console.log(tmp, elm.properties.description)
         res.push(tmp);
         // res.push(elm.properties.description);
     }
