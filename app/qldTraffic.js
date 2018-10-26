@@ -71,4 +71,13 @@ exports.extractImageURLAndID = function(webcamData){
 };
 
 
-
+exports.cleanList = function(allTrafficData){
+    let res = [];
+    for (let i = 0; i < allTrafficData.features.length; i++) {
+        const elm = allTrafficData.features[i];
+        let tmp = {"id": elm.properties.id, "description":elm.properties.description};
+        res.push(tmp);
+        //res.push(elm.properties.description);
+    }
+    return res;
+};

@@ -5,13 +5,13 @@ const qldTraffic = require('../qldTraffic');
 const objdetection = require('../lib/ObjDetection');
 
 
-webcamList = ["1", "3", "80", "117"];
+webcamList = ["1", "4", "5",];
 
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
     qldTraffic.QLDtrafficAPIRequest().then(function whenOk(allTrafficData) {
-        // const cams = qldTraffic.clean(allTrafficData); got deleted....
+        const cams = qldTraffic.cleanList(allTrafficData); 
         let webcamData = qldTraffic.filterTrafficData(webcamList, allTrafficData);
         //loop through list, extract all url and IDs, run detection.
         let tmp = []
@@ -20,7 +20,12 @@ router.get('/', function (req, res, next) {
             tmp.push(img);
         });
 
-        res.render('index', { title: 'Express' });
+        
+
+        res.render('index', { 
+            title: 'Express',
+            cams: JSON.stringify(cams),
+        });
     }).catch((error) => {
         console.log(error);
 
