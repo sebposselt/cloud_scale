@@ -7,11 +7,13 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "assert": "^1.4.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "install": "^0.12.2",
+    "mongodb": "^3.1.8",
     "morgan": "~1.9.0",
     "npm": "^6.4.1",
     "opencv4nodejs": "^4.9.0",
