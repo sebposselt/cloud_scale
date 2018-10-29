@@ -146,7 +146,7 @@ exports.clearDB = function () {
 exports.bulkUpload = function (arrOfObjs) {
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
-        console.log("Connected successfully to server");
+        console.log("Connected successfully to DB server");
         // the target DB
         const db = client.db(dbName);
         const collection = db.collection(collectionName);
@@ -162,5 +162,7 @@ exports.bulkUpload = function (arrOfObjs) {
         }
         bulk.execute();
         client.close();
+        console.log('DB client closed and stuff uploaded');
+        
     });
 }

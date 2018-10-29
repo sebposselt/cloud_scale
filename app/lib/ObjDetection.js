@@ -58,11 +58,6 @@ const makeDrawClassDetections = predictions => (drawImg, className, getColor, th
 // **********************************************************************************************************
 
 
-function sendImgToDB(imgBase64) {
-
-}
-
-
 
 // Summery: runs object detection on a picture, saves the resulting image with bounding boxes around found objs
 // Input: obj of type {id:,url:} and minConf is optional.
