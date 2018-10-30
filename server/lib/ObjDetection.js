@@ -69,7 +69,7 @@ exports.runDetect = async function (obj, minConf = 0.3) {
   let url = obj.url;
   try {
     await utils.saveImgFromUrl(id, url);
-    console.log('runDetect: image should be saved');
+    console.log("runDetect: image: "+ id + " should be saved");
     let filenameR = "cam" + id + ".jpg";
     let fullFilenameR = path.join(__dirname, '..', 'data', filenameR)
     let filenameW = "DONEcam" + id + ".jpg";

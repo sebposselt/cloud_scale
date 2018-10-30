@@ -69,13 +69,14 @@ router.post('/', async function (req, res, next) {
         let detectCarPromises = webcamData.map(x => {
             return objdetection.runDetect(qldTraffic.extractImageURLAndID(x), 0.1);
         });
-        console.log('detection done!');
         
         detectCarsArr = await Promise.all(detectCarPromises);
-        console.log('awaited');
+        console.log('detection done!');
         
         db.bulkUpload(detectCarsArr);
-        res.sendStatus(200);
+        
+        //check for db error. else:
+        // res.sendStatus(200);
         res.end()
     }).catch((error) => {
         console.log(error);

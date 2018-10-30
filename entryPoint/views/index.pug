@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  h1= title
+  p Express
+
+
+
+  mixin cam(id, desc)
+    input(type="checkbox", name='camID', value=id)
+    |#{desc} <br>
+
+  script(type='text/javascript')  
+    var cam_list = #{cams};
+
+
+
+
+
+
+  #form
+    form(align="center" action='/car-detection', method='post', target="_self")
+      input(type="checkbox", name="checkAll", onClick="toggle(this)", align="center")
+      | Choose all <br> <br>
+
+      each val, index in cams
+        +cam(val.id,val.description)
+
+      input(type='submit', value='Find Cams')
+
+
+  script(src = "javascripts/webCamSelection.js")
