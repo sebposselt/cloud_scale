@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const utils = require('../lib/utils');
 const qldTraffic = require('../qldTraffic');
 
 
@@ -30,7 +29,7 @@ router.post('/car-detection', function(req, res){
 
 
     //send msg to data-manager
-    utils.HTTPrequest(sessData);
+    qldTraffic.HTTPpost(sessData);
 
 
 
