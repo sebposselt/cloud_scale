@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  mixin cam(id, desc)
+    input(type="checkbox", name='camID', value=id)
+    |#{desc} <br>
+
+  script(type='text/javascript')  
+    var cam_list = #{cams};
+
+  #form
+    form(align="center" action='/car-detection', method='post', target="_self")
+      each val, index in cams
+        +cam(val.id,val.description)
+      input(type='submit', value='Find Cams')
