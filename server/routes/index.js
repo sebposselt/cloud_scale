@@ -75,6 +75,7 @@ router.post('/', async function (req, res, next) {
         console.log('awaited');
         
         db.bulkUpload(detectCarsArr);
+        res.sendStatus(200);
         res.end()
     }).catch((error) => {
         console.log(error);
