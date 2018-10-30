@@ -47,11 +47,17 @@ const updateDocument = function (id, img, db, callback) {
         });
 }
 
-const findDocuments = function (id, db, callback) {
+const findDocuments = function (ids, db, callback) {
+    q = [];
+    for (let i = 0; i < ids.length; i++) {
+        const elm = ids[i];
+        tmp = {"cam": parseInt(elm)};
+        q.push(tmp);
+    }
     // Get the documents collection
     const collection = db.collection(collectionName);
     // Find some documents
-    collection.find({ 'cam': id }).toArray(function (err, docs) {
+    collection.find({$or: q}).toArray(function (err, docs) {
         assert.equal(err, null);
         console.log("Found the following records");
         console.log(docs);
@@ -79,13 +85,13 @@ const clear = function (db) {
 
 
 
-exports.findImage = function (IDofObj) {
+exports.findImage = function (IDsofObjs) {
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         // the target DB
         const db = client.db(dbName);
-        findDocuments(IDofObj, db, function () {
+        findDocuments(IDsofObjs, db, function () {
             client.close();
         });
     });
