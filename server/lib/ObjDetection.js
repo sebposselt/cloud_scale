@@ -7,6 +7,7 @@ const path = require('path');
 const classNames = require('./dnnCocoClassNames');
 const { extractResults } = require('./dnn/ssdUtils');
 const db = require("./DB");
+const placeholderImg = require('./placeholderIMG');
 
 
 
@@ -69,7 +70,7 @@ exports.runDetect = async function (obj, minConf = 0.3) {
   let url = obj.url;
   try {
     await utils.saveImgFromUrl(id, url);
-    console.log("runDetect: image: "+ id + " should be saved");
+    // console.log("runDetect: image: "+ id + " should be saved");
     let filenameR = "cam" + id + ".jpg";
     let fullFilenameR = path.join(__dirname, '..', 'data', filenameR)
     let filenameW = "DONEcam" + id + ".jpg";
@@ -84,10 +85,11 @@ exports.runDetect = async function (obj, minConf = 0.3) {
 
     //save file
     cv.imwrite(fullFilenameW, img);
-    return { "cam": id, pic: utils.convertImgToBASE64(img) };
+    return [200,{ "cam": id, pic: utils.convertImgToBASE64(img) }];
 
   } catch (error) {
-    console.log("runDetect IO error: ", error);
+    console.log("id: " + String(id) + " caused runDetect error (likely IO): ", error);
+    return [500,{ "cam": id, pic: placeholderImg.img}];
   }
 }
 

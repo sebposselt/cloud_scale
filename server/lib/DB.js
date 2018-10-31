@@ -80,15 +80,6 @@ const clear = function (db) {
 
 
 
-
-
-
-
-
-
-
-
-
 exports.findImage = function (IDsofObjs) {
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
@@ -154,7 +145,10 @@ exports.clearDB = function () {
 
 exports.bulkUpload = function (arrOfObjs) {
     mongoClient.connect(url, function (err, client) {
-        assert.equal(null, err);
+        if (err) {
+            console.log('bulkUpload ERROR: ',err);
+            return 500;
+        }
         console.log("Connected successfully to DB server");
         // the target DB
         const db = client.db(dbName);
@@ -169,10 +163,17 @@ exports.bulkUpload = function (arrOfObjs) {
                     // $setOnInsert: { "cam": elm.cam }
                 });
         }
-        bulk.execute();
+        try {
+            bulk.execute();    
+        } catch (error) {
+            client.close();
+            console.log('bulkUpload ERROR: ', error);
+            return 500;
+        }
         client.close();
         console.log('DB client closed and stuff uploaded');
     });
+    return 200;
 }
 
 
