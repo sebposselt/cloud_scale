@@ -1,5 +1,9 @@
 const mongoClient = require("mongodb").MongoClient;
 const assert = require('assert');
+const placeholderImg = require('./placeholderIMG');
+
+
+
 
 // Connection URL
 const url = "mongodb://cab432:b4a7SvudCNdHlNg04looE6KsbwxanHSIGnLmXpsXk34UMVpzWKFWyFPWaTSABo0cilJZ0E4p45h7ifr3F4XjIQ%3D%3D@cab432.documents.azure.com:10255/?ssl=true"
@@ -148,7 +152,6 @@ exports.clearDB = function () {
     });
 }
 
-
 exports.bulkUpload = function (arrOfObjs) {
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
@@ -160,15 +163,24 @@ exports.bulkUpload = function (arrOfObjs) {
 
         for (let i = 0; i < arrOfObjs.length; i++) {
             const elm = arrOfObjs[i];
-            bulk.find({ "cam": elm.cam }).upsert().update(
+            bulk.find({ "cam": elm.cam }).update(
                 {
-                    $set: { "pic": elm.pic },
-                    $setOnInsert: { "cam": elm.cam }
+                    $set: { "pic": elm.pic }
+                    // $setOnInsert: { "cam": elm.cam }
                 });
         }
         bulk.execute();
         client.close();
         console.log('DB client closed and stuff uploaded');
-        
     });
 }
+
+
+exports.seedDB = function () {
+    let objs = [];
+    for (let i = 1; i < 201; i++) {
+        let tmp = {"cam":i,"pic":placeholderImg.img};
+        objs.push(tmp);
+    }
+    this.pushPicture(objs);
+};
