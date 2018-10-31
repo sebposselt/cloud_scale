@@ -2,6 +2,7 @@ const express = require('express');
 const unirest = require("unirest");
 const router = express.Router();
 
+const lbAddress = require('../LB_IP');
 const qldTraffic = require('../qldTraffic');
 
 router.post('/cams', (req, res, next) => {
@@ -24,7 +25,7 @@ router.post('/cams', (req, res, next) => {
 HTTPpost = function (data) {
     console.log('we are in');
     
-    var req = unirest("POST", "http://localhost:3000");
+    var req = unirest("POST", lbAddress.ip);
     req.headers({
         "content-type": "application/json"
     });
