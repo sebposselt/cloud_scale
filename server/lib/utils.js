@@ -78,8 +78,13 @@ exports.cv = cv;
 // Comment: Is used async by the caller.
 exports.saveImgFromUrl = (id, url) => {
   return new Promise((resolve, reject) => {
+    let dir = path.join(__dirname, '..', 'data');
+    console.log("PATH NAME: ",dir);
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
     let filename = "cam" + id + ".jpg";
-    let fullFilename = path.join(__dirname, '..', 'data', filename)
+    let fullFilename = path.join(dir, filename)
     request(url, { encoding: 'binary' }, function (error, response, body) {
       if (error) reject(error)
 
