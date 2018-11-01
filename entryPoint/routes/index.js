@@ -11,25 +11,26 @@ const qldTraffic = require('../qldTraffic');
 router.get('/', function (req, res, next) {
     qldTraffic.QLDtrafficAPIRequest().then(function whenOk(allTrafficData) {
         const cams = qldTraffic.cleanList(allTrafficData);
-        res.render('index', { 
+        res.render('index', {
             title: 'Express',
             cams: cams
         });
+        res.end();
     }).catch((error) => {
         console.log(error);
-
+        res.sendStatus(500);
+        res.end();
     });
 });
 
 
-
-router.post('/car-detection', function(req, res){
+router.post('/car-detection', function (req, res) {
     let sessData = {
-        "client_id" : req.session.id,
-        "cams" : req.body.camID
+        "client_id": req.session.id,
+        "cams": req.body.camID
     };
     //send msg to data-manager
-    HTTPpost(sessData);
+    let statusCode = HTTPpost(sessData);
 
     //get pictures from database
 
@@ -37,21 +38,34 @@ router.post('/car-detection', function(req, res){
         title: 'Detect Cars in WebCams',
         cams: sessData.cams
     });
+    res.sendStatus(statusCode);
+    res.end();
 });
 
 const HTTPpost = function (data) {
-    var req = unirest("POST", datamanagerAddress);
+    let statusCode = 200;
+    let req = unirest("POST", datamanagerAddress);
     req.headers({
         "content-type": "application/json"
     });
     req.type("json");
-    req.send(data);
-
-    req.end(function (res) {
-        if (res.error) throw new Error(res.error);
-        // console.log(res.body);
-
-    });
+    try {
+        req.send(data);
+        req.end(function (res) {
+            if (res.error) {
+                console.log(res.error);
+                statusCode = 500;
+            }
+        });
+        return statusCode;
+    }
+    catch (error) {
+        statusCode = 500;
+        console.log('HTTPpost ERROR: ', error);
+    }
+    finally {
+        return statusCode;
+    }
 }
 
 
