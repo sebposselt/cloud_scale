@@ -1,5 +1,35 @@
 extends layout
 
+
 block content
     h1= title
-    p Get pictures from Database
+
+    - var documents = window.setInterval(checkWeatherAPI, 10000);
+
+
+
+
+
+
+
+
+    if(documents.length === 0)
+        p Sorry, there were no results for your search
+            <br>
+            <br>
+            <br>
+            a.search-again-button(href='/') Try Again
+    else
+        div.container
+            for document in docs
+                div.pic-wrapper
+                    - var imgURL =  'data:image/jpeg;base64, ' + String(document.pic);
+                    img(src=imgURL)
+
+
+                    function checkWeatherAPI() {
+                        // go check API
+                        console.log("checking weather API");
+                }
+
+
