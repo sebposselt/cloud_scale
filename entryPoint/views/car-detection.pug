@@ -4,16 +4,7 @@ extends layout
 block content
     h1= title
 
-    - var documents = window.setInterval(checkWeatherAPI, 10000);
-
-
-
-
-
-
-
-
-    if(documents.length === 0)
+    if(docs.length === 0)
         p Sorry, there were no results for your search
             <br>
             <br>
@@ -27,9 +18,10 @@ block content
                     img(src=imgURL)
 
 
-                    function checkWeatherAPI() {
-                        // go check API
-                        console.log("checking weather API");
-                }
+
+
+
+
+
 
 
