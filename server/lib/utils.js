@@ -3,7 +3,15 @@ const fs = require('fs');
 const request = require('request-promise');
 const cv = require("opencv4nodejs");
 
+
+// **********************************************************************************************************
+// **********************************************************************************************************
+// **********************************************************************************************************
+//
 // code copied from https://github.com/justadudewhohacks/opencv4nodejs/tree/master/examples under MIT-licence
+//
+// **********************************************************************************************************
+// **********************************************************************************************************
 // **********************************************************************************************************
 const dataPath = path.resolve(__dirname, '../data');
 exports.dataPath = dataPath;
@@ -67,15 +75,19 @@ exports.drawGreenRect = (image, rect, opts = { thickness: 2 }) =>
 exports.drawRedRect = (image, rect, opts = { thickness: 2 }) =>
   drawRect(image, rect, new cv.Vec(0, 0, 255), opts);
 
+exports.cv = cv;
+// **********************************************************************************************************
+// **********************************************************************************************************
 // **********************************************************************************************************
 
 
-exports.cv = cv;
+
+
 // Summery: Saves an image from an URL in the DATA dir. namingscheme: cam<ID>.jpg
 // Input: 
 // Output: a promise to be handled by the caller
 // Error:
-// Comment: Is used async by the caller.
+// Comment: Is used async by the caller. If the dir doesn't exist, it will create it
 exports.saveImgFromUrl = (id, url) => {
   return new Promise((resolve, reject) => {
     let dir = path.join(__dirname, '..', 'data');

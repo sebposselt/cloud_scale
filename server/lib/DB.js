@@ -2,9 +2,6 @@ const mongoClient = require("mongodb").MongoClient;
 const assert = require('assert');
 const placeholderImg = require('./placeholderIMG');
 
-
-
-
 // Connection URL
 const url = "mongodb://cab432:b4a7SvudCNdHlNg04looE6KsbwxanHSIGnLmXpsXk34UMVpzWKFWyFPWaTSABo0cilJZ0E4p45h7ifr3F4XjIQ%3D%3D@cab432.documents.azure.com:10255/?ssl=true"
 // Database and Collection Names
@@ -12,6 +9,9 @@ const dbName = 'MaybeCars';
 const collectionName = 'MaybeCars';
 
 
+// ********************************************************************
+// ************************* helper functions *************************
+// ********************************************************************
 const insertPicture = function(arrOfObjs,db,callback) {
     // Get the documents collection
     const collection = db.collection(collectionName);
@@ -80,6 +80,11 @@ const clear = function (db) {
 
 
 
+
+/// SUMMERY : find images in database
+/// INPUT	: array of id: []:string
+/// OUTPUT	: array of objects. [{_id,cam,pic}]
+/// ERROR	: 
 exports.findImage = function (IDsofObjs) {
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
@@ -92,7 +97,10 @@ exports.findImage = function (IDsofObjs) {
     });
 }
 
-
+/// SUMMERY : 
+/// INPUT	: the cam id and the new picture in base64 form 
+/// OUTPUT	: 
+/// ERROR	: 
 exports.updateImage = function (IDofObj,newPic) {
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
@@ -105,6 +113,11 @@ exports.updateImage = function (IDofObj,newPic) {
     });
 }
 
+
+/// SUMMERY : 
+/// INPUT	: the cam id of target
+/// OUTPUT	: 
+/// ERROR	: 
 exports.deleteOne =function(IDofObj){
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
@@ -118,6 +131,11 @@ exports.deleteOne =function(IDofObj){
     });
 }
 
+
+/// SUMMERY : 
+/// INPUT	: [{cam,pic}]
+/// OUTPUT	: 
+/// ERROR	: 
 exports.pushPicture = function (arrOfObjs) {
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
@@ -131,6 +149,11 @@ exports.pushPicture = function (arrOfObjs) {
     });
 }
 
+
+/// SUMMERY : removes all entries in the database
+/// INPUT	: 
+/// OUTPUT	: 
+/// ERROR	: 
 exports.clearDB = function () {
     mongoClient.connect(url, function (err, client) {
         assert.equal(null, err);
@@ -143,6 +166,13 @@ exports.clearDB = function () {
     });
 }
 
+
+/// SUMMERY : uploads multiple images at once. 
+//            the DB needs to already have an entry for all the objets you want to upload. Therefore "SeedDB"  
+//            must have been called at some point prior to using this function
+/// INPUT	: [{cam,pic}]
+/// OUTPUT	:
+/// ERROR	: 
 exports.bulkUpload = function (arrOfObjs) {
     mongoClient.connect(url, function (err, client) {
         if (err) {
@@ -177,6 +207,11 @@ exports.bulkUpload = function (arrOfObjs) {
 }
 
 
+/// SUMMERY : places 200 placeholders in the db so bulkupload can used, 
+///           and the visuals of the frontend work, even if the requested pictures is not processed yet
+/// INPUT	: 
+/// OUTPUT	: 
+/// ERROR	: 
 exports.seedDB = function () {
     let objs = [];
     for (let i = 1; i < 201; i++) {

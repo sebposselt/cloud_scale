@@ -11,7 +11,14 @@ const placeholderImg = require('./placeholderIMG');
 
 
 
+// **********************************************************************************************************
+// **********************************************************************************************************
+// **********************************************************************************************************
+//
 // code copied from https://github.com/justadudewhohacks/opencv4nodejs/tree/master/examples under MIT-licence
+//
+// **********************************************************************************************************
+// **********************************************************************************************************
 // **********************************************************************************************************
 if (!cv.xmodules.dnn) {
   throw new Error('exiting: opencv4nodejs compiled without dnn module');
@@ -57,14 +64,16 @@ const makeDrawClassDetections = predictions => (drawImg, className, getColor, th
   return drawImg;
 };
 // **********************************************************************************************************
+// **********************************************************************************************************
+// **********************************************************************************************************
 
 
 
 // Summery: runs object detection on a picture, saves the resulting image with bounding boxes around found objs
 // Input: obj of type {id:,url:} and minConf is optional.
-// Output:
-// Error:
-// Comment:
+// Output: returns a status code and a {cam,pic} obj.
+// Error: if an error happens the statuscode is 500, which is used by the caller.
+// Comment: 
 exports.runDetect = async function (obj, minConf = 0.3) {
   let id = obj.id;
   let url = obj.url;

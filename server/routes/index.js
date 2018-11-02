@@ -13,6 +13,14 @@ const db = require("../lib/DB");
 //     client_id: string,
 //     cams: []string
 // }
+/// SUMMERY : VERY IMPORTANT. body must be:
+//              {
+//                  client_id: string,
+//                  cams: []string
+//              }
+/// INPUT	: 
+/// OUTPUT	: 
+/// ERROR	: sends statuscodes depending on how what happened
 router.post('/', async function (req, res, next) {
     let returnCode = 200;
     if (req.body["client_id"] == null) {
@@ -38,21 +46,15 @@ router.post('/', async function (req, res, next) {
         //loop through list, extract all url and IDs, run detection.
         let detectCarPromises = webcamData.map(x => {
             return objdetection.runDetect(qldTraffic.extractImageURLAndID(x), 0.1);
-            // returnCode = result[0];
-            // return result[1];
         });
 
-        // if (returnCode != 200){
-        //     console.log('api or detection error... :( ');
-        //     res.sendStatus(returnCode);
-        //     res.end();
-        //     return;
-        // }
+
         let carsDetected = [];
         try {
             let detectCarsArr = await Promise.all(detectCarPromises);
             for (let i = 0; i < detectCarsArr.length; i++) {
                 const elm = detectCarsArr[i];
+                //elm is an array of [statuscode,{camID,pic}]
                 const code = elm[0];
                 const car = elm[1];
                 if (code == 200){
