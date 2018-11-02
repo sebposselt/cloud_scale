@@ -25,3 +25,8 @@ a {
   border: 1px solid black;
   background-color: rgba(156, 149, 155, 0.55);
 }
+
+.is-center {
+  text-align: center;
+  padding: 40px;
+}
