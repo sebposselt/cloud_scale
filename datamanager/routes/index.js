@@ -2,20 +2,31 @@ const express = require('express');
 const unirest = require("unirest");
 const router = express.Router();
 
-const lbAddress = require('../LB_IP');
-const qldTraffic = require('../qldTraffic');
+const lbAddress = require('../LB_IP'); //loadbalancer ip
+//const qldTraffic = require('../qldTraffic');
 
+
+/// SUMMERY : The datamanager was planned to have more responsibility, but has been simplified to just forwarding data from the frontend
+/// INPUT	: 
+/// OUTPUT	: 
+/// ERROR	: 
 router.post('/cams', (req, res, next) => {
     let statusCode = 200;
-    console.log("Recieved msg");
-    qldTraffic.addCameras(req.body);
+    console.log("recieved msg");
+    // qldTraffic.addCameras(req.body);
     
     statusCode = HTTPpost(req.body);
     res.sendStatus(statusCode);
     res.end();
 });
-//message format
-//{"id":"lJ4CqJ_25Py9XFws-MetYGjYcfnWYK3N","cams":["164","166","167"]}
+
+
+
+/// SUMMERY : Helper function to send data between servers.
+/// INPUT	: the data you want to send
+/// OUTPUT	: 200 or 500 depending on if it went well. The output is to be used as StatusCodes.
+/// ERROR	: return 500 in case of error, 
+/// Notes   : 
 HTTPpost = function (data) {
     let statusCode = 200;
     var req = unirest("POST", lbAddress.ip);
@@ -40,7 +51,5 @@ HTTPpost = function (data) {
         return statusCode;
     }
 }
-
-
 
 module.exports = router;
