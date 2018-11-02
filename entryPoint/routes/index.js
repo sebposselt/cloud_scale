@@ -18,7 +18,6 @@ router.get('/', function (req, res, next) {
         res.end();
     }).catch((error) => {
         console.log(error);
-        res.sendStatus(500);
         res.end();
     });
 });
@@ -30,15 +29,16 @@ router.post('/car-detection', function (req, res) {
         "cams": req.body.camID
     };
     //send msg to data-manager
-    let statusCode = HTTPpost(sessData);
+    // statusCode is not used, but HTTPpost is a copied helper function used other places where the return value is used.
+    let statusCode = HTTPpost(sessData); 
 
     //get pictures from database
-
+    // res.sendStatus(statusCode);
     res.render('car-detection', {
         title: 'Detect Cars in WebCams',
         cams: sessData.cams
     });
-    res.sendStatus(statusCode);
+    // res.sendStatus(statusCode);
     res.end();
 });
 
@@ -67,6 +67,5 @@ const HTTPpost = function (data) {
         return statusCode;
     }
 }
-
 
 module.exports = router;
