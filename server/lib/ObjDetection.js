@@ -1,4 +1,3 @@
-const request = require('request-promise');
 const { drawRect, } = require('./utils');
 const utils = require('./utils');
 const cv = require("opencv4nodejs");
@@ -6,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 const classNames = require('./dnnCocoClassNames');
 const { extractResults } = require('./dnn/ssdUtils');
-const db = require("./DB");
 const placeholderImg = require('./placeholderIMG');
 
 

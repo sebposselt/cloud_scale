@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const qldTraffic = require('../qldTraffic');
+const qldTraffic = require('../lib/qldTraffic');
 const objdetection = require('../lib/ObjDetection');
 const db = require("../lib/DB");
 
@@ -47,8 +47,6 @@ router.post('/', async function (req, res, next) {
         let detectCarPromises = webcamData.map(x => {
             return objdetection.runDetect(qldTraffic.extractImageURLAndID(x), 0.1);
         });
-
-
         let carsDetected = [];
         try {
             let detectCarsArr = await Promise.all(detectCarPromises);
