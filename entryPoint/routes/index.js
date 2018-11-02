@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-var unirest = require('unirest');
-const datamanagerAddress = "http://localhost:8080/cams"
+const unirest = require('unirest');
 
+const datamanagerAddress = "http://localhost:8080/cams"
 const qldTraffic = require('../qldTraffic');
 
 
@@ -42,6 +42,13 @@ router.post('/car-detection', function (req, res) {
     res.end();
 });
 
+
+
+/// SUMMERY : Helper function to send data between servers.
+/// INPUT	: the data you want to send
+/// OUTPUT	: 200 or 500 depending on if it went well. The output is to be used as StatusCodes.
+/// ERROR	: return 500 in case of error, 
+/// Notes   : 
 const HTTPpost = function (data) {
     let statusCode = 200;
     let req = unirest("POST", datamanagerAddress);

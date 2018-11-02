@@ -1,15 +1,18 @@
-var unirest = require('unirest');
-let apikey = "3e83add325cbb69ac4d8e5bf433d770b";
+const unirest = require('unirest');
+const apikey = "3e83add325cbb69ac4d8e5bf433d770b";
 
 
-let APIinfo = {
+const APIinfo = {
     "hostname" : "https://api.qldtraffic.qld.gov.au/",
     "path" : "v1/webcams/",
     "APIkey": "?apikey=" + apikey
 };
 
 
-
+/// SUMMERY : call the API
+/// INPUT	: 
+/// OUTPUT	: returns a promise of the api response.
+/// ERROR	: 
 exports.QLDtrafficAPIRequest = function()  {
     return new Promise(function(resolve, reject) {
         unirest.get(APIinfo.hostname + APIinfo.path + APIinfo.APIkey)
@@ -27,6 +30,12 @@ exports.QLDtrafficAPIRequest = function()  {
     })
 };
 
+
+
+/// SUMMERY : strips a "webcam object" from the API response for the needed properties
+/// INPUT	: 
+/// OUTPUT	: 
+/// ERROR	: 
 exports.extractImageURLAndID = function(webcamData){
     let webcamImage = {
         "id" : webcamData.properties.id,
@@ -36,13 +45,18 @@ exports.extractImageURLAndID = function(webcamData){
 };
 
 
+
+/// SUMMERY : used to strip the API response object into an array of {id,description}. 
+///           It is used to produce the list of webcams to choose from in the frontend 
+/// INPUT	: The api response object
+/// OUTPUT	: [{id,description}]
+/// ERROR	: 
 exports.cleanList = function(allTrafficData){
     let res = [];
     for (let i = 0; i < allTrafficData.features.length; i++) {
         const elm = allTrafficData.features[i];
         let tmp = {"id": elm.properties.id, "description":elm.properties.description};
         res.push(tmp);
-        // res.push(elm.properties.description);
     }
     return res;
 };
